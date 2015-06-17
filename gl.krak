@@ -1,0 +1,31 @@
+__if_comp__ __C__ simple_passthrough(::"-lGL") """
+    #include <GL/gl.h>
+"""
+
+fun clearcolor(r:float,g:float,b:float,a:float) : void {
+    __if_comp__ __C__ {
+        simple_passthrough(r = r, g = g, b = b, a = a::) """
+        return glClearColor(r,g,b,a);
+        """
+    }
+    return
+}
+
+fun clear() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glClear(GL_COLOR_BUFFER_BIT);
+    """
+    return
+    }
+}
+
+fun viewport(x:int,y:int,width:int,height:int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(x = x, y = y, width = width, height = height::) """
+    return glViewport(x,y,width,height);
+    """
+    }
+    return
+}
+

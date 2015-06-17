@@ -1,0 +1,79 @@
+__if_comp__ __C__ simple_passthrough(::"-lSDL2") """
+    #include <SDL2/SDL.h>
+"""
+
+fun init_video() : int {
+    __if_comp__ __C__ {
+        simple_passthrough """
+        return SDL_Init(SDL_INIT_VIDEO);
+        """
+        return
+    }
+}
+
+fun quit() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return SDL_Quit();
+    """
+    return
+    }
+}
+
+fun gl_setattributes(major : int, minor : int, dbuff : int, depth : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(major = major, minor = minor, dbuff = dbuff, depth = depth::) """
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
+	    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, dbuff);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, depth);
+        """
+        }
+        return
+}
+
+fun createwindow(name : char*, width : int, height : int) : void* {
+    __if_comp__ __C__ {
+    simple_passthrough(name = name, width = width, height = height::) """
+        return (void*)SDL_CreateWindow((const char*) name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+        """
+        }
+        return
+}
+
+fun gl_createcontext(screen : void*) : void* {
+    __if_comp__ __C__ {
+    simple_passthrough(screen = screen::) """
+    return (void*)SDL_GL_CreateContext((SDL_Window*)screen);
+    """
+    }
+    return
+}
+
+fun gl_deletecontext(context : void*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(context = context::) """
+    return SDL_GL_DeleteContext((SDL_GLContext)context);
+    """
+    }
+    return
+}
+
+fun destroywindow(screen : void*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(screen = screen::) """
+    return SDL_DestroyWindow((SDL_Window*)screen);
+    """
+    }
+    return
+}
+
+fun gl_swapwindow(screen : void*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(screen = screen::) """
+    return SDL_GL_SwapWindow((SDL_Window*)screen);
+    """
+    }
+    return
+}
