@@ -154,3 +154,94 @@ fun enablevertexattribarray(index : int) : void {
     }
     return
 }
+
+fun createshader(shaderType : int) : int {
+    __if_comp__ __C__ {
+    simple_passthrough(shaderType = shaderType::) """
+    return glCreateShader(shaderType);
+    """
+    }
+    return 0
+}
+
+fun createprogram() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glCreateProgram();
+    """
+    }
+    return 0
+}
+
+fun shadersource(shader : int, count : int, string : char**, length : int*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(shader = shader, count = count, string = string, length = length::) """
+    glShaderSource(shader, count, (const char**)string, length);
+    """
+    }
+    return
+}
+
+fun compileshader(shader : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(shader = shader ::) """
+    glCompileShader(shader);
+    """
+    }
+    return
+}
+
+fun attachshader(program : int, shader : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(program = program, shader = shader ::) """
+    glAttachShader(program, shader);
+    """
+    }
+    return
+}
+
+fun bindattriblocation(program : int, index : int, name : char*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(program = program, index = index, name = name ::) """
+    glBindAttribLocation(program, index,  name);
+    """
+    }
+    return
+}
+
+fun linkprogram(program : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(program = program ::) """
+    glLinkProgram(program);
+    """
+    }
+    return
+}
+
+fun useprogram(program : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(program = program ::) """
+    glUseProgram(program);
+    """
+    }
+    return
+}
+
+fun deleteshader(shader : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(shader = shader ::) """
+    glDeleteShader(shader);
+    """
+    }
+    return
+}
+
+fun deleteprogram(program : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(program = program ::) """
+    glDeleteProgram(program);
+    """
+    }
+    return
+}
+

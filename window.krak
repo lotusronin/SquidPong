@@ -1,0 +1,53 @@
+import sdl2
+import gl
+import io
+
+obj gameWindow {
+    var height : int
+    var width : int
+    var name : char *
+    var screen : void*
+    var context : void*
+    
+    fun create(w : int, h : int, n : char*) : int {
+        io::println("Initializing SDL!!!")
+    
+        if(sdl2::init_video() < 0) {
+            io::println("Unable to Initialize SDL!!!")
+            sdl2::quit()
+            return -1
+        }
+
+        sdl2::gl_setattributes(2,1,1,24)
+    
+        io::println("Making Window!")
+        screen = sdl2::createwindow(n, w, h)
+    
+        if(!screen) {
+            io::println("Unable to make window!")
+            sdl2::quit()
+            return -1
+        }
+
+        context = sdl2::gl_createcontext(screen)
+        gl::clearcolor(0.0,0.0,0.0,0.0)
+        gl::clear()
+        sdl2::gl_swapwindow(screen)
+
+        gl::viewport(0,0,w,h)
+        gl::matrixmode()
+        gl::loadidentity()
+        gl::ortho(0.0,640.0,0.0,480.0,1.0,-1.0)
+        gl::enable()
+        gl::blendfunc()
+
+        return 0
+    }
+
+    fun destroy() : void {
+        sdl2::gl_deletecontext(context)
+        sdl2::destroywindow(screen)
+        sdl2::quit()
+    }
+
+}
