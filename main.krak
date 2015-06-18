@@ -1,7 +1,7 @@
 import sdl2
 import io
 import gl
-import vector
+//import vector
 
 fun main() : int {
     
@@ -27,10 +27,16 @@ fun main() : int {
 
     var context : void* = sdl2::gl_createcontext(screen)
     //var arr.construct() : vector::vector<float>
-    var f : float = 0
-    gl::clearcolor(f,f,f,f)
+    gl::clearcolor(0.0,0.0,0.0,0.0)
     gl::clear()
     sdl2::gl_swapwindow(screen)
+
+    gl::viewport(0,0,640,480)
+    gl::matrixmode()
+    gl::loadidentity()
+    gl::ortho(0.0,640.0,0.0,480.0,1.0,-1.0)
+    gl::enable()
+    gl::blendfunc()
 
     var count : int = 0
     for (var i = 0; i < 1000000; i++;) {

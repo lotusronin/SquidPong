@@ -1,8 +1,23 @@
-__if_comp__ __C__ simple_passthrough(::"-lGL") """
+__if_comp__ __C__ simple_passthrough(::"-lGL -lGLEW") """
+    #include <GL/glew.h>
     #include <GL/gl.h>
 """
 
-fun clearcolor(r:float,g:float,b:float,a:float) : void {
+//Enums?? Also constants, so use val?
+//This is pretty hacky and should be done better.
+//Probably done automatically like the rust lib.
+/*
+var GL_COLOR_BUFFER_BIT : int = 16384
+var GL_BLEND : int = 3042
+var GL_PROJECTION : int = 5899
+var GL_SRC_ALPHA : int = 770
+var GL_ONE_MINUS_SRC_ALPHA : int = 771
+*/
+//**********
+//End constants
+//**********
+
+fun clearcolor(r:double,g:double,b:double,a:double) : void {
     __if_comp__ __C__ {
         simple_passthrough(r = r, g = g, b = b, a = a::) """
         return glClearColor(r,g,b,a);
@@ -16,8 +31,8 @@ fun clear() : void {
     simple_passthrough """
     return glClear(GL_COLOR_BUFFER_BIT);
     """
-    return
     }
+    return
 }
 
 fun viewport(x:int,y:int,width:int,height:int) : void {
@@ -29,3 +44,113 @@ fun viewport(x:int,y:int,width:int,height:int) : void {
     return
 }
 
+//FIXME should remake to take in flag
+fun matrixmode() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glMatrixMode(GL_PROJECTION);
+    """
+    }
+    return
+}
+
+//FIXME make it take in flag
+fun enable() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glEnable(GL_BLEND);
+    """
+    }
+    return
+}
+
+//FIXME make it take in flag
+fun blendfunc() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    """
+    }
+    return
+}
+
+fun loadidentity() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glLoadIdentity();
+    """
+    }
+    return
+}
+
+fun ortho(left : double, right : double, bottom : double, top : double, nearVal : double, farVal : double) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(left=left, right=right, bottom=bottom, top=top, nearVal=nearVal, farVal=farVal::) """
+    return glOrtho(left, right, bottom, top, nearVal, farVal);
+    """
+    }
+    return
+}
+
+fun glewinit() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glewInit();
+    """
+    }
+    return 0
+}
+
+fun genbuffers(size : int, buffers : int*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(size=size,buffers=buffers::) """
+    glGenBuffers(size, buffers);
+    """
+    }
+    return
+}
+
+fun bindbuffer(target : int, buffer : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(target = target, buffer = buffer ::) """
+    glBindBuffer(target, buffer);
+    """
+    }
+    return
+}
+
+fun bufferdata(target : int, size : int, data : void*, usage : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(target = target, size = size, data = data, usage = usage::) """
+    glBufferData(target, size, data, usage);
+    """
+    }
+    return
+}
+
+fun geterror() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return glGetError();
+    """
+    }
+    return 0
+}
+
+fun vertexattribpointer(index : int, size : int, type : int, normalized : char, stride : int, pointer : void*) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(index = index, size = size, type = type, normalized = normalized, stride = stride, pointer = pointer::) """
+    glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+    """
+    }
+    return
+}
+
+fun enablevertexattribarray(index : int) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(index = index::) """
+    glEnableVertexAttribArray(index);
+    """
+    }
+    return
+}
