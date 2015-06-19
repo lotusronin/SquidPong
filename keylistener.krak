@@ -1,0 +1,16 @@
+import sdl2
+import io
+
+obj keylistener {
+    var keyboard : void*
+    
+
+    fun poll(done : int*) : void {
+        keyboard = sdl2::getkeyboardstate()
+        while(sdl2::pollevent()) {
+            if(sdl2::checkEvent(keyboard) == 1) {
+                *done = 1
+            }
+        }
+    }
+}

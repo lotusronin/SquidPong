@@ -3,20 +3,23 @@ import io
 import gl
 //import vector
 import window
+import keylistener
 
 fun main() : int {
     
     var winName : char* = "SQUID PONG"
     var win : window::gameWindow
     var res : int = win.create(640, 480, winName)
-
-    var count : int = 0
-    for (var i = 0; i < 1000000; i++;) {
-        io::println(count)
-        count++
+    
+    var listener : keylistener::keylistener
+    var done : int = 0
+    
+    //Game Loop!!!
+    while(!done) {
+        listener.poll(&done)
     }
+    
     io::println("Time to clean up!!")
-    io::println(count)
 
     win.destroy()
     

@@ -1,5 +1,7 @@
 __if_comp__ __C__ simple_passthrough(::"-lSDL2") """
     #include <SDL2/SDL.h>
+
+    SDL_Event event;
 """
 
 fun init_video() : int {
@@ -77,3 +79,44 @@ fun gl_swapwindow(screen : void*) : void {
     }
     return
 }
+
+fun getkeyboardstate() : void* {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return (void*)SDL_GetKeyboardState(NULL);
+    """
+    }
+    return 0
+}
+
+fun pollevent() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return SDL_PollEvent(&event);
+    """
+    }
+    return 0
+}
+
+fun checkEvent(keys : void*) : int {
+    __if_comp__ __C__ {
+    simple_passthrough(keys = keys ::) """
+    switch(event.type) {
+        case SDL_QUIT:
+            return 1;
+            break;
+        case SDL_KEYDOWN:
+            if( ((const Uint8*)keys)[SDL_SCANCODE_ESCAPE]) {
+                return 1;
+            }
+            break;
+
+        default:
+            return 0;
+            break;
+    }
+    """
+    }
+    return 0
+}
+            
