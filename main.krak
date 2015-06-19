@@ -5,9 +5,19 @@ import gl
 import window
 import keylistener
 import shader
+import fileio
+import string
 
 fun main() : int {
     
+    var fp : FILE* = fileio::fopen("settings.txt","r")
+    var s1 = string::string("abc").toCharArray()
+    var s2 = string::string("0123456789").toCharArray()
+    var readCount = fileio::fscanf(fp, "%s %s", s1, s2)
+
+    io::println(s1)
+    io::println(s2)
+
     var winName : char* = "SQUID PONG"
     var win : window::gameWindow
     var res : int = win.create(640, 480, winName)
