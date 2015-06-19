@@ -1,0 +1,43 @@
+import gl
+import io
+import string
+
+obj shader {
+    var vertsrc : string::string
+    var fragsrc : string::string
+    var vshad : int
+    var fshad : int
+    var prog : int
+
+    fun compile() : void {
+        vertsrc = string::string("")
+        fragsrc = string::string("")
+        
+        //GL_VERTEX_SHADER = 35633
+        //GL_FRAGMENT_SHADER = 35632
+        vshad = gl::createshader(35633)
+        fshad = gl::createshader(35632)
+        
+        var vs : char* = vertsrc.toCharArray()
+        var fs : char* = fragsrc.toCharArray()
+
+        gl::shadersource(vshad, 1, &vs, 0)
+        gl::shadersource(fshad, 1, &fs, 0)
+
+        gl::compileshader(vshad)
+        gl::compileshader(fshad)
+
+        //Skip error checking cus I like to live dangerously :D
+
+        prog = gl::createprogram()
+        gl::attachshader(prog, vshad)
+        gl::attachshader(prog, fshad)
+
+        gl::linkprogram(prog)
+        return
+    }
+
+    fun enable() : void {
+        gl::useprogram(prog)
+    }
+}
