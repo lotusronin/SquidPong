@@ -31,15 +31,15 @@ obj gameWindow {
 
         context = sdl2::gl_createcontext(screen)
         gl::clearcolor(0.0,0.0,0.0,0.0)
-        gl::clear()
+        gl::clear(gl::COLOR_BUFFER_BIT)
         sdl2::gl_swapwindow(screen)
 
         gl::viewport(0,0,w,h)
-        gl::matrixmode()
+        gl::matrixmode(gl::PROJECTION)
         gl::loadidentity()
         //gl::ortho(0.0,640.0,0.0,480.0,1.0,-1.0)
-        gl::enable()
-        gl::blendfunc()
+        gl::enable(gl::BLEND)
+        gl::blendfunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA)
 
         return 0
     }
