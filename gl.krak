@@ -245,3 +245,38 @@ fun deleteprogram(program : int) : void {
     return
 }
 
+fun vertex3f(x : float, y : float, z : float) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(x = x, y = y, z = z ::) """
+    glVertex3f(x,y,z);
+    """
+    }
+    return
+}
+
+fun color3f(x : float, y : float, z : float) : void {
+    __if_comp__ __C__ {
+    simple_passthrough(x = x, y = y, z = z ::) """
+    glColor3f(x,y,z);
+    """
+    }
+    return
+}
+
+fun begin() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    glBegin(GL_TRIANGLES);
+    """
+    }
+    return
+}
+
+fun end() : void {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    glEnd();
+    """
+    }
+    return
+}

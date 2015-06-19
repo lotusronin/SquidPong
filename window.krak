@@ -37,7 +37,7 @@ obj gameWindow {
         gl::viewport(0,0,w,h)
         gl::matrixmode()
         gl::loadidentity()
-        gl::ortho(0.0,640.0,0.0,480.0,1.0,-1.0)
+        //gl::ortho(0.0,640.0,0.0,480.0,1.0,-1.0)
         gl::enable()
         gl::blendfunc()
 

@@ -12,16 +12,30 @@ fun main() : int {
     var win : window::gameWindow
     var res : int = win.create(640, 480, winName)
     
+    gl::glewinit()
+
     var listener : keylistener::keylistener
     var done : int = 0
-
-    var s : shader::shader
-    s.compile()
-    s.enable()
     
+    //var s : shader::shader
+    //s.compile()
+    //s.enable()
+    
+    var f1 : float = 0.0
+    var f2 : float = 1.0
+    var f3 : float = 0.5
     //Game Loop!!!
     while(!done) {
         listener.poll(&done)
+        gl::begin()
+        gl::color3f(f2,f1,f1)
+        gl::vertex3f(-f2,f1,f1)
+        gl::color3f(f1,f2,f1)
+        gl::vertex3f(f2,f1,f1)
+        gl::color3f(f1,f1,f2)
+        gl::vertex3f(f3,f3,f1)
+        gl::end()
+        sdl2::gl_swapwindow(win.screen)
     }
     
     io::println("Time to clean up!!")
