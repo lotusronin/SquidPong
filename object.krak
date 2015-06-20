@@ -1,0 +1,69 @@
+import gl
+import io
+import vector
+import string
+import shader
+
+obj glObject {
+    var vbo : int
+    var colloc : int
+    var color : vector::vector<float>
+    var pshader : shader::shader*
+    
+    fun construct(s : shader::shader*) {
+        color.construct()
+        gl::genbuffers(1,&vbo)
+        pshader = s
+        colloc = gl::getuniformlocation(s->prog, "col")
+    }
+
+    fun destruct() {
+        color.destruct()
+    }
+
+    fun getColor() : float* {
+        return color.data
+    }
+
+    fun setColor(r : float, g : float, b : float) {
+        color = vector::vector<float>()
+        color.addEnd(r)
+        color.addEnd(g)
+        color.addEnd(b)
+        return
+    }
+}
+
+
+obj gameObject {
+    var globj : glObject
+    var pos : vector::vector<float>
+
+    fun construct(s : shader::shader*) {
+        globj.construct(s)
+        pos.construct()
+    }
+
+    fun destruct() {
+        globj.destruct()
+        pos.destruct()
+    }
+
+    fun setPos(posvec : vector::vector<float>) {
+        pos = posvec
+        gl::bindbuffer(gl::ARRAY_BUFFER, globj.vbo)
+        gl::bufferdata(gl::ARRAY_BUFFER, 4*pos.size, pos.data, gl::STATIC_DRAW)
+    }
+    
+    fun setColor(r : float, g : float, b : float) {
+        globj.setColor(r,g,b)
+    }
+
+    fun render() {
+        gl::bindbuffer(gl::ARRAY_BUFFER, globj.vbo)
+        gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,3*4,0)
+        gl::enablevertexattribarray(0)
+        gl::uniform3f(globj.colloc, globj.color.data)
+        gl::drawarrays(gl::TRIANGLES, 0, 3)
+    }
+}

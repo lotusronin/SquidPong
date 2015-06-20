@@ -313,3 +313,21 @@ fun getshaderinfolog(shader : int, size : int, buffer : char*) {
     }
     return
 }
+
+fun getuniformlocation(shader : int, name : char*) : int {
+    __if_comp__ __C__ {
+    simple_passthrough(shader, name ::) """
+    return glGetUniformLocation(shader, (const char*)name);
+    """
+    }
+    return 0
+}
+
+fun uniform3f(location : int, vals : float*) {
+    __if_comp__ __C__ {
+    simple_passthrough(location, vals ::) """
+    glUniform3f(location, vals[0], vals[1], vals[2]);
+    """
+    }
+    return
+}

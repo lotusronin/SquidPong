@@ -6,11 +6,12 @@ import window
 import keylistener
 import shader
 import fileio
-import string
+//import string
 import object
 
 fun main() : int {
-    
+   
+   /*
     var fp : FILE* = fileio::fopen("settings.txt","r")
     var s1 = string::string("abc").toCharArray()
     var s2 = string::string("0123456789").toCharArray()
@@ -18,6 +19,7 @@ fun main() : int {
 
     io::println(s1)
     io::println(s2)
+    */
 
     var winName : char* = "SQUID PONG"
     var win : window::gameWindow
@@ -31,7 +33,6 @@ fun main() : int {
     var s : shader::shader
     s.compile()
     s.enable()
-    //s.disable()
     
     var f1 : float = 0.0
     var f2 : float = 1.0
@@ -40,28 +41,31 @@ fun main() : int {
     var triVerts.construct() : vector::vector<float>
     triVerts.addEnd(-f2)
     triVerts.addEnd(f1)
-    triVerts.addEnd(f2)
+    triVerts.addEnd(-f2+f3)
     triVerts.addEnd(f1)
-    triVerts.addEnd(f3)
+    triVerts.addEnd(-f2+f3)
     triVerts.addEnd(f3)
    
-    //var paddle1 : object::gameObject
-    //paddle1.construct()
-    //paddle1.setPos(triVerts)
-    var vbo : int
-    gl::genbuffers(1, &vbo)
-    gl::bindbuffer(gl::ARRAY_BUFFER, vbo)
-    gl::bufferdata(gl::ARRAY_BUFFER, 4*triVerts.size, triVerts.data, gl::STATIC_DRAW)
-    var vptr : int = 0
+    var paddle1 : object::gameObject
+    paddle1.construct(&s)
+    paddle1.setPos(triVerts)
+    paddle1.setColor(f2,f1,f1)
+    
+    triVerts.data[0] = f2
+    triVerts.data[2] = f2-f3
+    triVerts.data[4] = f2-f3
+    
+    var paddle2 : object::gameObject
+    paddle2.construct(&s)
+    paddle2.setPos(triVerts)
+    paddle2.setColor(f1,f1,f2)
 
     //Game Loop!!!
     while(!done) {
         listener.poll(&done)
-        //drawTriangles()
-        gl::bindbuffer(gl::ARRAY_BUFFER, vbo)
-        gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,3*4,vptr)
-        gl::enablevertexattribarray(0)
-        gl::drawarrays(gl::TRIANGLES, 0, 3)
+        
+        paddle1.render()
+        paddle2.render()
 
         sdl2::gl_swapwindow(win.screen)
     }
@@ -74,6 +78,7 @@ fun main() : int {
     return 0
 } 
 
+/*
 fun drawTriangles(f1 : float, f2 : float, f3 : float) {
     gl::begin()
     gl::color3f(f2,f1,f1)
@@ -85,3 +90,4 @@ fun drawTriangles(f1 : float, f2 : float, f3 : float) {
     gl::end()
     return
 }
+*/
