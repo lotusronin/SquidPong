@@ -1,6 +1,7 @@
 import gl
 import io
 import string
+import vector
 
 obj shader {
     var vertsrc : string::string
@@ -11,22 +12,23 @@ obj shader {
 
     fun compile() : void {
         io::println("Preparing to compile shader")
-        vertsrc = string::string("")
-        fragsrc = string::string("")
+        vertsrc.construct()
+        fragsrc.construct()
         
         //Need multiline strings!!!
         vertsrc = """
         #version 120
-        attribute vec2 pos 
+        attribute vec2 pos;
         void main() {
-        gl_Position.xyz = vec3(pos, 0.0);
-        gl_Position.w = 1.0;}
+        gl_Position = gl_ProjectionMatrix*gl_ModelViewMatrix*vec4(pos, 0.0, 1.0);
+        }
         """
 
         fragsrc = """
         #version 120
         void main() {
-        gl_FragColor = vec3(1.0, 0.0, 0.0, 1.0);}
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
         """
         //End of need for multiline strings!!!
         
@@ -51,11 +53,33 @@ obj shader {
         gl::compileshader(fshad)
 
         //Skip error checking cus I like to live dangerously :D
+        //Except not cus it isn't working :C
+
+        var errorBuff.construct() : vector::vector<char>
+        errorBuff.resize(1024)
+        var error : int
+        
+        io::println("Checking for vshader errors")
+        gl::getshaderiv(vshad,gl::COMPILE_STATUS,&error)
+        if(error == gl::FALSE) {
+            gl::getshaderinfolog(vshad,1024,errorBuff.data)
+            io::print(errorBuff.data)
+        }
+        
+        io::println("Checking for vshader errors")
+        gl::getshaderiv(fshad,gl::COMPILE_STATUS,&error)
+        if(error == gl::FALSE) {
+            gl::getshaderinfolog(fshad,1024,errorBuff.data)
+            io::print(errorBuff.data)
+        }
         
         io::println("creating program")
         prog = gl::createprogram()
         gl::attachshader(prog, vshad)
         gl::attachshader(prog, fshad)
+
+        io::println("binding attribute locations")
+        gl::bindattriblocation(prog, 0, "pos")
         
         io::println("Linking program")
         gl::linkprogram(prog)
@@ -64,6 +88,7 @@ obj shader {
 
     fun enable() : void {
         gl::useprogram(prog)
+        gl::enablevertexattribarray(0)
     }
 
     fun disable() {

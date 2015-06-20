@@ -1,12 +1,13 @@
 import sdl2
 import io
 import gl
-//import vector
+import vector
 import window
 import keylistener
 import shader
 import fileio
 import string
+import object
 
 fun main() : int {
     
@@ -29,23 +30,39 @@ fun main() : int {
     
     var s : shader::shader
     s.compile()
-    //s.enable()
-    s.disable()
+    s.enable()
+    //s.disable()
     
     var f1 : float = 0.0
     var f2 : float = 1.0
     var f3 : float = 0.5
+
+    var triVerts.construct() : vector::vector<float>
+    triVerts.addEnd(-f2)
+    triVerts.addEnd(f1)
+    triVerts.addEnd(f2)
+    triVerts.addEnd(f1)
+    triVerts.addEnd(f3)
+    triVerts.addEnd(f3)
+   
+    //var paddle1 : object::gameObject
+    //paddle1.construct()
+    //paddle1.setPos(triVerts)
+    var vbo : int
+    gl::genbuffers(1, &vbo)
+    gl::bindbuffer(gl::ARRAY_BUFFER, vbo)
+    gl::bufferdata(gl::ARRAY_BUFFER, 4*triVerts.size, triVerts.data, gl::STATIC_DRAW)
+    var vptr : int = 0
+
     //Game Loop!!!
     while(!done) {
         listener.poll(&done)
-        gl::begin()
-        gl::color3f(f2,f1,f1)
-        gl::vertex3f(-f2,f1,f1)
-        gl::color3f(f1,f2,f1)
-        gl::vertex3f(f2,f1,f1)
-        gl::color3f(f1,f1,f2)
-        gl::vertex3f(f3,f3,f1)
-        gl::end()
+        //drawTriangles()
+        gl::bindbuffer(gl::ARRAY_BUFFER, vbo)
+        gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,3*4,vptr)
+        gl::enablevertexattribarray(0)
+        gl::drawarrays(gl::TRIANGLES, 0, 3)
+
         sdl2::gl_swapwindow(win.screen)
     }
     
@@ -56,3 +73,15 @@ fun main() : int {
     io::println("All done. It Worked!!!!!")
     return 0
 } 
+
+fun drawTriangles(f1 : float, f2 : float, f3 : float) {
+    gl::begin()
+    gl::color3f(f2,f1,f1)
+    gl::vertex3f(-f2,f1,f1)
+    gl::color3f(f1,f2,f1)
+    gl::vertex3f(f2,f1,f1)
+    gl::color3f(f1,f1,f2)
+    gl::vertex3f(f3,f3,f1)
+    gl::end()
+    return
+}

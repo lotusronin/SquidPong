@@ -16,7 +16,12 @@ var ONE_MINUS_SRC_ALPHA : int = 771
 var MODELVIEW : int = 5888
 var VERTEX_SHADER : int = 35633
 var FRAGMENT_SHADER : int = 35632
-
+var FLOAT : int = 5126
+var FALSE : int = 0
+var ARRAY_BUFFER : int = 34962
+var STATIC_DRAW : int = 35044
+var TRIANGLES : int = 4
+var COMPILE_STATUS : int = 35713
 //**********
 //End constants
 //**********
@@ -120,10 +125,10 @@ fun bindbuffer(target : int, buffer : int) : void {
     return
 }
 
-fun bufferdata(target : int, size : int, data : void*, usage : int) {
+fun bufferdata(target : int, size : int, data : float*, usage : int) {
     __if_comp__ __C__ {
     simple_passthrough(target = target, size = size, data = data, usage = usage::) """
-    glBufferData(target, size, data, usage);
+    glBufferData(target, size, (void*)data, usage);
     """
     }
     return
@@ -138,10 +143,10 @@ fun geterror() : int {
     return 0
 }
 
-fun vertexattribpointer(index : int, size : int, type : int, normalized : char, stride : int, pointer : void*) {
+fun vertexattribpointer(index : int, size : int, type : int, normalized : int, stride : int, pointer : int) {
     __if_comp__ __C__ {
     simple_passthrough(index = index, size = size, type = type, normalized = normalized, stride = stride, pointer = pointer::) """
-    glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+    glVertexAttribPointer(index, size, type, (char)normalized, stride, pointer);
     """
     }
     return
@@ -277,6 +282,33 @@ fun end() : void {
     __if_comp__ __C__ {
     simple_passthrough """
     glEnd();
+    """
+    }
+    return
+}
+
+fun drawarrays(mode : int, first : int, count : int) {
+    __if_comp__ __C__ {
+    simple_passthrough(mode, first, count ::) """
+    glDrawArrays(mode, first, count);
+    """
+    }
+    return
+}
+
+fun getshaderiv(shader : int, type : int, error : int*) {
+    __if_comp__ __C__ {
+    simple_passthrough(shader, type, error ::) """
+    glGetShaderiv(shader, type, error);
+    """
+    }
+    return
+}
+
+fun getshaderinfolog(shader : int, size : int, buffer : char*) {
+    __if_comp__ __C__ {
+    simple_passthrough(shader, size, buffer ::) """
+    glGetShaderInfoLog(shader, size, NULL, buffer);
     """
     }
     return
