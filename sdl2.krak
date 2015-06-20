@@ -4,6 +4,17 @@ __if_comp__ __C__ simple_passthrough(::"-lSDL2") """
     SDL_Event event;
 """
 
+/*
+ * Some Global flags!!
+ */
+var SCANCODE_W : int = 26
+var SCANCODE_S : int = 22
+var SCANCODE_UP : int = 82
+var SCANCODE_DOWN : int = 81
+/*
+ * End flags!!!
+ */
+
 fun init_video() : int {
     __if_comp__ __C__ {
         simple_passthrough """
@@ -119,4 +130,17 @@ fun checkEvent(keys : void*) : int {
     }
     return 0
 }
-            
+
+fun checkPlayerKeys(keys : void*, k1 : int, k2 : int) : int {
+    __if_comp__ __C__ {
+    simple_passthrough(keys, k1, k2 ::) """
+    if( ((const Uint8*)keys)[k1]) {
+        return 1;
+    }else if( ((const Uint8*)keys)[k2]) {
+        return 2;
+    }
+    """
+    }
+    return 0
+}
+          

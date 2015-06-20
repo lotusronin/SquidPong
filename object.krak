@@ -64,6 +64,6 @@ obj gameObject {
         gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,3*4,0)
         gl::enablevertexattribarray(0)
         gl::uniform3f(globj.colloc, globj.color.data)
-        gl::drawarrays(gl::TRIANGLES, 0, 3)
+        gl::drawarrays(gl::QUADS, 0, 4)
     }
 }

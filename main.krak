@@ -11,16 +11,6 @@ import object
 
 fun main() : int {
    
-   /*
-    var fp : FILE* = fileio::fopen("settings.txt","r")
-    var s1 = string::string("abc").toCharArray()
-    var s2 = string::string("0123456789").toCharArray()
-    var readCount = fileio::fscanf(fp, "%s %s", s1, s2)
-
-    io::println(s1)
-    io::println(s2)
-    */
-
     var winName : char* = "SQUID PONG"
     var win : window::gameWindow
     var res : int = win.create(640, 480, winName)
@@ -33,39 +23,41 @@ fun main() : int {
     var s : shader::shader
     s.compile()
     s.enable()
-    
-    var f1 : float = 0.0
-    var f2 : float = 1.0
-    var f3 : float = 0.5
 
-    var triVerts.construct() : vector::vector<float>
-    triVerts.addEnd(-f2)
-    triVerts.addEnd(f1)
-    triVerts.addEnd(-f2+f3)
-    triVerts.addEnd(f1)
-    triVerts.addEnd(-f2+f3)
-    triVerts.addEnd(f3)
-   
     var paddle1 : object::gameObject
-    paddle1.construct(&s)
-    paddle1.setPos(triVerts)
-    paddle1.setColor(f2,f1,f1)
-    
-    triVerts.data[0] = f2
-    triVerts.data[2] = f2-f3
-    triVerts.data[4] = f2-f3
-    
     var paddle2 : object::gameObject
-    paddle2.construct(&s)
-    paddle2.setPos(triVerts)
-    paddle2.setColor(f1,f1,f2)
-
+    initGameObjs(&paddle1,&paddle2,&s)
+    
     //Game Loop!!!
     while(!done) {
+        /*
+         * Check for keypresses
+         */
         listener.poll(&done)
+        var res : int = listener.getPressP1()
+        if(res == 1) {
+            io::println("User1 Pressed UP!!!")
+        } else if (res == 2) {
+            io::println("User1 Pressed DOWN!!!")
+        }
+        res = listener.getPressP2()
+        if(res == 1) {
+            io::println("User2 Pressed W!!!")
+        } else if (res == 2) {
+            io::println("User2 Pressed S!!!")
+        }
+
+        /*
+         * Apply Update Position/Check for win conditions
+         */
+        //FIXME TODO!!!
         
+        /*
+         * Render game objects
+         */
         paddle1.render()
         paddle2.render()
+        //TODO add puck
 
         sdl2::gl_swapwindow(win.screen)
     }
@@ -91,3 +83,48 @@ fun drawTriangles(f1 : float, f2 : float, f3 : float) {
     return
 }
 */
+
+fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, s : shader::shader*) {
+    var f1 : float = 0.0
+    var f2 : float = 1.0
+    var f3 : float = 0.5
+
+    var triVerts.construct() : vector::vector<float>
+    triVerts.addEnd(-f2)
+    triVerts.addEnd(f1)
+    triVerts.addEnd(-f2+f3)
+    triVerts.addEnd(f1)
+    triVerts.addEnd(-f2+f3)
+    triVerts.addEnd(f3)
+    triVerts.addEnd(-f2)
+    triVerts.addEnd(f3)
+    
+    obj1->construct(s)
+    obj1->setPos(triVerts)
+    obj1->setColor(f2,f1,f1)
+    
+    triVerts.data[0] = f2
+    triVerts.data[2] = f2-f3
+    triVerts.data[4] = f2-f3
+    triVerts.data[6] = f2
+    
+    obj2->construct(s)
+    obj2->setPos(triVerts)
+    obj2->setColor(f1,f1,f2)
+    
+    triVerts.destruct()
+}
+
+fun readSettings() {
+   
+   /*
+    var fp : FILE* = fileio::fopen("settings.txt","r")
+    var s1 = string::string("abc").toCharArray()
+    var s2 = string::string("0123456789").toCharArray()
+    var readCount = fileio::fscanf(fp, "%s %s", s1, s2)
+
+    io::println(s1)
+    io::println(s2)
+    */
+
+}

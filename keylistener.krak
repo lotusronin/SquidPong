@@ -13,4 +13,17 @@ obj keylistener {
             }
         }
     }
+
+    fun getPressP1() : int {
+       return sdl2::checkPlayerKeys(keyboard,sdl2::SCANCODE_UP,sdl2::SCANCODE_DOWN) 
+    }
+    
+    fun getPressP2() : int {
+       return sdl2::checkPlayerKeys(keyboard,sdl2::SCANCODE_W,sdl2::SCANCODE_S) 
+    }
+
+    fun queryKeyboardState() {
+        keyboard = sdl2::getkeyboardstate()
+    }
+
 }

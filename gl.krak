@@ -22,6 +22,7 @@ var ARRAY_BUFFER : int = 34962
 var STATIC_DRAW : int = 35044
 var TRIANGLES : int = 4
 var COMPILE_STATUS : int = 35713
+var QUADS : int = 7
 //**********
 //End constants
 //**********
