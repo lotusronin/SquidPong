@@ -7,6 +7,7 @@ import shader
 obj glObject {
     var vbo : int
     var colloc : int
+    var deltaloc : int
     var color : vector::vector<float>
     var pshader : shader::shader*
     
@@ -15,6 +16,7 @@ obj glObject {
         gl::genbuffers(1,&vbo)
         pshader = s
         colloc = gl::getuniformlocation(s->prog, "col")
+        deltaloc = gl::getuniformlocation(s->prog, "delta")
     }
 
     fun destruct() {
@@ -38,10 +40,16 @@ obj glObject {
 obj gameObject {
     var globj : glObject
     var pos : vector::vector<float>
+    var d : vector::vector<float>
 
     fun construct(s : shader::shader*) {
         globj.construct(s)
         pos.construct()
+        d.construct()
+        var zero : float = 0
+        d.addEnd(zero)
+        d.addEnd(zero)
+        d.addEnd(zero)
     }
 
     fun destruct() {
@@ -53,6 +61,7 @@ obj gameObject {
         pos = posvec
         gl::bindbuffer(gl::ARRAY_BUFFER, globj.vbo)
         gl::bufferdata(gl::ARRAY_BUFFER, 4*pos.size, pos.data, gl::STATIC_DRAW)
+        gl::finish()
     }
     
     fun setColor(r : float, g : float, b : float) {
@@ -61,9 +70,26 @@ obj gameObject {
 
     fun render() {
         gl::bindbuffer(gl::ARRAY_BUFFER, globj.vbo)
-        gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,3*4,0)
+        gl::vertexattribpointer(0,2,gl::FLOAT,gl::FALSE,0,0)
         gl::enablevertexattribarray(0)
         gl::uniform3f(globj.colloc, globj.color.data)
+        gl::uniform3f(globj.deltaloc, d.data)
         gl::drawarrays(gl::QUADS, 0, 4)
+    }
+
+    fun moveDown() {
+        var limit : float = -0.7
+        var incrm : float = -0.01
+        if(d[1] > limit) {
+            d.data[1] = d.data[1]+incrm
+        }
+    }
+
+    fun moveUp() {
+        var limit : float = 0.7
+        var incrm : float = 0.01
+        if(d[1] < limit) {
+            d.data[1] = d.data[1]+incrm
+        }
     }
 }

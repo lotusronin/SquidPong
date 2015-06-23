@@ -90,10 +90,10 @@ fun loadidentity() {
     return
 }
 
-fun ortho(left : double, right : double, bottom : double, top : double, nearVal : double, farVal : double) : void {
+fun ortho(left : int, right : int, bottom : int, top : int, nearVal : int, farVal : int) : void {
     __if_comp__ __C__ {
     simple_passthrough(left=left, right=right, bottom=bottom, top=top, nearVal=nearVal, farVal=farVal::) """
-    return glOrtho(left, right, bottom, top, nearVal, farVal);
+    return glOrtho((float)left, (float)right, (float)bottom, (float)top, (float)nearVal, (float)farVal);
     """
     }
     return
@@ -328,6 +328,24 @@ fun uniform3f(location : int, vals : float*) {
     __if_comp__ __C__ {
     simple_passthrough(location, vals ::) """
     glUniform3f(location, vals[0], vals[1], vals[2]);
+    """
+    }
+    return
+}
+
+fun finish() {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    glFinish();
+    """
+    }
+    return
+}
+
+fun detachshader(program : int, shader : int) {
+    __if_comp__ __C__ {
+    simple_passthrough(program, shader ::) """
+    glDetachShader(program, shader);
     """
     }
     return

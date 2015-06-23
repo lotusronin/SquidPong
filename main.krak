@@ -36,15 +36,19 @@ fun main() : int {
         listener.poll(&done)
         var res : int = listener.getPressP1()
         if(res == 1) {
-            io::println("User1 Pressed UP!!!")
+            //io::println("User1 Pressed UP!!!")
+            paddle2.moveUp()
         } else if (res == 2) {
-            io::println("User1 Pressed DOWN!!!")
+            //io::println("User1 Pressed DOWN!!!")
+            paddle2.moveDown()
         }
         res = listener.getPressP2()
         if(res == 1) {
-            io::println("User2 Pressed W!!!")
+            //io::println("User2 Pressed W!!!")
+            paddle1.moveUp()
         } else if (res == 2) {
-            io::println("User2 Pressed S!!!")
+            //io::println("User2 Pressed S!!!")
+            paddle1.moveDown()
         }
 
         /*
@@ -63,45 +67,36 @@ fun main() : int {
     }
     
     io::println("Time to clean up!!")
-
+    
+    s.disable()
+    s.destruct()
     win.destroy()
     
     io::println("All done. It Worked!!!!!")
     return 0
 } 
 
-/*
-fun drawTriangles(f1 : float, f2 : float, f3 : float) {
-    gl::begin()
-    gl::color3f(f2,f1,f1)
-    gl::vertex3f(-f2,f1,f1)
-    gl::color3f(f1,f2,f1)
-    gl::vertex3f(f2,f1,f1)
-    gl::color3f(f1,f1,f2)
-    gl::vertex3f(f3,f3,f1)
-    gl::end()
-    return
-}
-*/
 
 fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, s : shader::shader*) {
-    var f1 : float = 0.0
-    var f2 : float = 1.0
-    var f3 : float = 0.5
+    var f1 : float = 0.3
+    var f2 : float = 0.9
+    var f3 : float = 0.05
+    var f4 : float = 0.0
+    var f5 : float = 1.0
 
     var triVerts.construct() : vector::vector<float>
     triVerts.addEnd(-f2)
-    triVerts.addEnd(f1)
+    triVerts.addEnd(-f1)
+    triVerts.addEnd(-f2+f3)
+    triVerts.addEnd(-f1)
     triVerts.addEnd(-f2+f3)
     triVerts.addEnd(f1)
-    triVerts.addEnd(-f2+f3)
-    triVerts.addEnd(f3)
     triVerts.addEnd(-f2)
-    triVerts.addEnd(f3)
+    triVerts.addEnd(f1)
     
     obj1->construct(s)
     obj1->setPos(triVerts)
-    obj1->setColor(f2,f1,f1)
+    obj1->setColor(f5,f4,f4)
     
     triVerts.data[0] = f2
     triVerts.data[2] = f2-f3
@@ -110,7 +105,7 @@ fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, s : sha
     
     obj2->construct(s)
     obj2->setPos(triVerts)
-    obj2->setColor(f1,f1,f2)
+    obj2->setColor(f4,f4,f5)
     
     triVerts.destruct()
 }
