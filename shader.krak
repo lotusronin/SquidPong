@@ -2,6 +2,7 @@ import gl
 import io
 import string
 import vector
+import mem
 
 obj shader {
     var vertsrc : string::string
@@ -22,6 +23,7 @@ obj shader {
         uniform vec3 delta;
         void main() {
         vec2 vpos = pos;
+        vpos.x = vpos.x + delta.x;
         vpos.y = vpos.y + delta.y;
         gl_Position = gl_ProjectionMatrix*gl_ModelViewMatrix*vec4(vpos, 0.0, 1.0);
         }
@@ -92,6 +94,12 @@ obj shader {
         gl::detachshader(prog, fshad)
         gl::deleteshader(vshad)
         gl::deleteshader(fshad)
+
+        //memory leack check
+        vertsrc.destruct()
+        fragsrc.destruct()
+        mem::free<char>(vs)
+        mem::free<char>(fs)
 
         
         return

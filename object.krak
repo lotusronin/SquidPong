@@ -55,10 +55,12 @@ obj gameObject {
     fun destruct() {
         globj.destruct()
         pos.destruct()
+        d.destruct()
     }
 
     fun setPos(posvec : vector::vector<float>) {
         pos = posvec
+        posvec.destruct()
         gl::bindbuffer(gl::ARRAY_BUFFER, globj.vbo)
         gl::bufferdata(gl::ARRAY_BUFFER, 4*pos.size, pos.data, gl::STATIC_DRAW)
         gl::finish()
@@ -90,6 +92,22 @@ obj gameObject {
         var incrm : float = 0.01
         if(d[1] < limit) {
             d.data[1] = d.data[1]+incrm
+        }
+    }
+    
+    fun moveLeft() {
+        var limit : float = -1.02
+        var incrm : float = -0.01
+        if(d[0] < limit) {
+            d.data[0] = d.data[0]+incrm
+        }
+    }
+    
+    fun moveRight() {
+        var limit : float = 1.02
+        var incrm : float = 0.01
+        if(d[0] < limit) {
+            d.data[0] = d.data[0]+incrm
         }
     }
 }

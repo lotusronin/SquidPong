@@ -26,11 +26,19 @@ fun main() : int {
 
     var paddle1 : object::gameObject
     var paddle2 : object::gameObject
-    initGameObjs(&paddle1,&paddle2,&s)
+    var pong : object::gameObject
+    initGameObjs(&paddle1,&paddle2,&pong,&s)
     
+    //Game State Vars
+    var redpoints : int = 0
+    var bluepoints : int = 0
+    var dirx : int
+    var diry : int
+    var reset : bool = true
+
+    io::println("===Score====")
     //Game Loop!!!
     while(!done) {
-        gl::clear(gl::COLOR_BUFFER_BIT)
         /*
          * Check for keypresses
          */
@@ -56,34 +64,105 @@ fun main() : int {
          * Apply Update Position/Check for win conditions
          */
         //FIXME TODO!!!
-        
+        //Someone just scored, reset delta vec
+        if(reset) {
+            io::print("Red: ")
+            io::print(redpoints)
+            io::print(" Blue: ")
+            io::print(bluepoints)
+            io::print("\n")
+            
+            reset = false
+            dirx = rand()
+            diry = rand()
+            var f : float = 0.0
+            if(dirx){
+                f = 0.02
+            } else {
+                f = -0.02
+            }
+            pong.d.data[0] = f
+            if(diry){
+                f = 0.02
+            } else {
+                f = -0.02
+            }
+            pong.d.data[1] = f
+        }
+
+        //check for scoring
+        var temp : float = -1.02
+        if(pong.d.data[0] <= temp) {
+            bluepoints += 1
+            reset = true
+        } else if(pong.d.data[0] >= -temp) {
+            redpoints += 1
+            reset = true
+        } else {
+            //check collisions with upper/lower boundaries
+            temp = -0.98
+            if(pong.d.data[1] <= temp) {
+                pong.d.data[1] = temp
+                diry = 1
+            } else if(pong.d.data[1] >= -temp) {
+                pong.d.data[1] = -temp
+                diry = 0
+            }
+            //check collisions with paddles
+            //TODO
+        }
+
+        //Update delta vec
+        temp = 0.02
+        if(diry) {
+            pong.d.data[1] = pong.d.data[1] + temp
+        } else {
+            pong.d.data[1] = pong.d.data[1] - temp
+        }
+        if(dirx) {
+            pong.d.data[0] = pong.d.data[0] + temp
+        } else {
+            pong.d.data[0] = pong.d.data[0] - temp
+        }
+
         /*
          * Render game objects
          */
+        gl::clear(gl::COLOR_BUFFER_BIT)
         paddle1.render()
         paddle2.render()
-        //TODO add puck
+        pong.render()
 
         sdl2::gl_swapwindow(win.screen)
     }
     
     io::println("Time to clean up!!")
     
+    paddle1.destruct()
+    paddle2.destruct()
+    pong.destruct()
     s.disable()
     s.destruct()
     win.destroy()
     
     io::println("All done. It Worked!!!!!")
+    io::println("===Final Score===")
+    io::print("Red: ")
+    io::print(redpoints)
+    io::print(" Blue: ")
+    io::print(bluepoints)
+    io::print("\n")
     return 0
 } 
 
 
-fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, s : shader::shader*) {
+fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, ball : object::gameObject*, s : shader::shader*) {
     var f1 : float = 0.3
     var f2 : float = 0.9
     var f3 : float = 0.05
     var f4 : float = 0.0
     var f5 : float = 1.0
+    var f6 : float = 0.02
 
     var triVerts.construct() : vector::vector<float>
     triVerts.addEnd(-f2)
@@ -107,7 +186,20 @@ fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, s : sha
     obj2->construct(s)
     obj2->setPos(triVerts)
     obj2->setColor(f4,f4,f5)
-    
+   
+    triVerts.data[0] = f4-f6
+    triVerts.data[1] = f4-f6
+    triVerts.data[2] = f4+f6
+    triVerts.data[3] = f4-f6
+    triVerts.data[4] = f4+f6
+    triVerts.data[5] = f4+f6
+    triVerts.data[6] = f4-f6
+    triVerts.data[7] = f4+f6
+
+    ball->construct(s)
+    ball->setPos(triVerts)
+    ball->setColor(f4,f5,f4)
+
     triVerts.destruct()
 }
 
@@ -123,4 +215,13 @@ fun readSettings() {
     io::println(s2)
     */
 
+}
+
+fun rand() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return rand()%2;
+    """
+    }
+    return 0
 }
