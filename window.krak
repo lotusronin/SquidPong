@@ -8,10 +8,10 @@ obj gameWindow {
     var name : char *
     var screen : void*
     var context : void*
-    
+
     fun create(w : int, h : int, n : char*) : int {
         io::println("Initializing SDL!!!")
-    
+
         if(sdl2::init_video() < 0) {
             io::println("Unable to Initialize SDL!!!")
             sdl2::quit()
@@ -19,10 +19,10 @@ obj gameWindow {
         }
 
         sdl2::gl_setattributes(2,1,1,24)
-    
+
         io::println("Making Window!")
         screen = sdl2::createwindow(n, w, h)
-    
+
         if(!screen) {
             io::println("Unable to make window!")
             sdl2::quit()
@@ -44,7 +44,7 @@ obj gameWindow {
         return 0
     }
 
-    fun destroy() : void {
+    fun destruct() : void {
         sdl2::gl_deletecontext(context)
         sdl2::destroywindow(screen)
         sdl2::quit()

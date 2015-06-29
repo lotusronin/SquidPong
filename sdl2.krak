@@ -20,7 +20,6 @@ fun init_video() : int {
         simple_passthrough """
         return SDL_Init(SDL_INIT_VIDEO);
         """
-        return
     }
 }
 
@@ -51,8 +50,7 @@ fun createwindow(name : char*, width : int, height : int) : void* {
         return (void*)SDL_CreateWindow((const char*) name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
         """
-        }
-        return
+    }
 }
 
 fun gl_createcontext(screen : void*) : void* {
@@ -61,7 +59,6 @@ fun gl_createcontext(screen : void*) : void* {
     return (void*)SDL_GL_CreateContext((SDL_Window*)screen);
     """
     }
-    return
 }
 
 fun gl_deletecontext(context : void*) : void {
@@ -97,7 +94,6 @@ fun getkeyboardstate() : void* {
     return (void*)SDL_GetKeyboardState(NULL);
     """
     }
-    return 0
 }
 
 fun pollevent() : int {
@@ -143,4 +139,4 @@ fun checkPlayerKeys(keys : void*, k1 : int, k2 : int) : int {
     }
     return 0
 }
-          
+

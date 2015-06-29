@@ -7,7 +7,7 @@ def FILE int
 fun fopen(path : char*, mode : char*) : FILE* {
     __if_comp__ __C__ {
         simple_passthrough(path = path, mode = mode ::) """
-        return fopen(path,mode);
+        return (void*) fopen(path,mode);
         """
     }
 }

@@ -147,7 +147,7 @@ fun geterror() : int {
 fun vertexattribpointer(index : int, size : int, type : int, normalized : int, stride : int, pointer : int) {
     __if_comp__ __C__ {
     simple_passthrough(index = index, size = size, type = type, normalized = normalized, stride = stride, pointer = pointer::) """
-    glVertexAttribPointer(index, size, type, (char)normalized, stride, pointer);
+    glVertexAttribPointer(index, size, type, (char)normalized, stride, (void*)pointer);
     """
     }
     return
