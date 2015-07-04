@@ -12,7 +12,7 @@ import object
 
 fun main() : int {
 
-    var winName : char* = "SQUID PONG"
+    var winName : *char = "SQUID PONG"
     var win : window::gameWindow
     var res : int = win.create(640, 480, winName)
 
@@ -152,7 +152,7 @@ fun main() : int {
 }
 
 
-fun initGameObjs(obj1 : object::gameObject*, obj2 : object::gameObject*, ball : object::gameObject*, s : shader::shader*) {
+fun initGameObjs(obj1 : *object::gameObject, obj2 : *object::gameObject, ball : *object::gameObject, s : *shader::shader) {
     var f1 : float = 0.3
     var f2 : float = 0.9
     var f3 : float = 0.05

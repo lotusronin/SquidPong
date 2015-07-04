@@ -5,11 +5,11 @@ import io
 obj gameWindow {
     var height : int
     var width : int
-    var name : char *
-    var screen : void*
-    var context : void*
+    var name : *char 
+    var screen : *void
+    var context : *void
 
-    fun create(w : int, h : int, n : char*) : int {
+    fun create(w : int, h : int, n : *char) : int {
         io::println("Initializing SDL!!!")
 
         if(sdl2::init_video() < 0) {

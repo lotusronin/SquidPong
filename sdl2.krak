@@ -44,7 +44,7 @@ fun gl_setattributes(major : int, minor : int, dbuff : int, depth : int) : void 
         return
 }
 
-fun createwindow(name : char*, width : int, height : int) : void* {
+fun createwindow(name : *char, width : int, height : int) : *void {
     __if_comp__ __C__ {
     simple_passthrough(name = name, width = width, height = height::) """
         return (void*)SDL_CreateWindow((const char*) name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -53,7 +53,7 @@ fun createwindow(name : char*, width : int, height : int) : void* {
     }
 }
 
-fun gl_createcontext(screen : void*) : void* {
+fun gl_createcontext(screen : *void) : *void {
     __if_comp__ __C__ {
     simple_passthrough(screen = screen::) """
     return (void*)SDL_GL_CreateContext((SDL_Window*)screen);
@@ -61,7 +61,7 @@ fun gl_createcontext(screen : void*) : void* {
     }
 }
 
-fun gl_deletecontext(context : void*) : void {
+fun gl_deletecontext(context : *void) : void {
     __if_comp__ __C__ {
     simple_passthrough(context = context::) """
     return SDL_GL_DeleteContext((SDL_GLContext)context);
@@ -70,7 +70,7 @@ fun gl_deletecontext(context : void*) : void {
     return
 }
 
-fun destroywindow(screen : void*) : void {
+fun destroywindow(screen : *void) : void {
     __if_comp__ __C__ {
     simple_passthrough(screen = screen::) """
     return SDL_DestroyWindow((SDL_Window*)screen);
@@ -79,7 +79,7 @@ fun destroywindow(screen : void*) : void {
     return
 }
 
-fun gl_swapwindow(screen : void*) : void {
+fun gl_swapwindow(screen : *void) : void {
     __if_comp__ __C__ {
     simple_passthrough(screen = screen::) """
     return SDL_GL_SwapWindow((SDL_Window*)screen);
@@ -88,7 +88,7 @@ fun gl_swapwindow(screen : void*) : void {
     return
 }
 
-fun getkeyboardstate() : void* {
+fun getkeyboardstate() : *void {
     __if_comp__ __C__ {
     simple_passthrough """
     return (void*)SDL_GetKeyboardState(NULL);
@@ -105,7 +105,7 @@ fun pollevent() : int {
     return 0
 }
 
-fun checkEvent(keys : void*) : int {
+fun checkEvent(keys : *void) : int {
     __if_comp__ __C__ {
     simple_passthrough(keys = keys ::) """
     switch(event.type) {
@@ -127,7 +127,7 @@ fun checkEvent(keys : void*) : int {
     return 0
 }
 
-fun checkPlayerKeys(keys : void*, k1 : int, k2 : int) : int {
+fun checkPlayerKeys(keys : *void, k1 : int, k2 : int) : int {
     __if_comp__ __C__ {
     simple_passthrough(keys, k1, k2 ::) """
     if( ((const Uint8*)keys)[k1]) {

@@ -9,9 +9,9 @@ obj glObject {
     var colloc : int
     var deltaloc : int
     var color : vector::vector<float>
-    var pshader : shader::shader*
+    var pshader : *shader::shader
     
-    fun construct(s : shader::shader*) {
+    fun construct(s : *shader::shader) {
         color.construct()
         gl::genbuffers(1,&vbo)
         pshader = s
@@ -23,7 +23,7 @@ obj glObject {
         color.destruct()
     }
 
-    fun getColor() : float* {
+    fun getColor() : *float {
         return color.data
     }
 
@@ -42,7 +42,7 @@ obj gameObject {
     var pos : vector::vector<float>
     var d : vector::vector<float>
 
-    fun construct(s : shader::shader*) {
+    fun construct(s : *shader::shader) {
         globj.construct(s)
         pos.construct()
         d.construct()

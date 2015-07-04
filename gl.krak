@@ -108,7 +108,7 @@ fun glewinit() : int {
     return 0
 }
 
-fun genbuffers(size : int, buffers : int*) {
+fun genbuffers(size : int, buffers : *int) {
     __if_comp__ __C__ {
     simple_passthrough(size=size,buffers=buffers::) """
     glGenBuffers(size, buffers);
@@ -126,7 +126,7 @@ fun bindbuffer(target : int, buffer : int) : void {
     return
 }
 
-fun bufferdata(target : int, size : int, data : float*, usage : int) {
+fun bufferdata(target : int, size : int, data : *float, usage : int) {
     __if_comp__ __C__ {
     simple_passthrough(target = target, size = size, data = data, usage = usage::) """
     glBufferData(target, size, (void*)data, usage);
@@ -180,7 +180,7 @@ fun createprogram() : int {
     return 0
 }
 
-fun shadersource(shader : int, count : int, string : char**, length : int*) {
+fun shadersource(shader : int, count : int, string : **char, length : *int) {
     __if_comp__ __C__ {
     simple_passthrough(shader = shader, count = count, string = string, length = length::) """
     glShaderSource(shader, count, (const char**)string, length);
@@ -207,7 +207,7 @@ fun attachshader(program : int, shader : int) {
     return
 }
 
-fun bindattriblocation(program : int, index : int, name : char*) {
+fun bindattriblocation(program : int, index : int, name : *char) {
     __if_comp__ __C__ {
     simple_passthrough(program = program, index = index, name = name ::) """
     glBindAttribLocation(program, index,  name);
@@ -297,7 +297,7 @@ fun drawarrays(mode : int, first : int, count : int) {
     return
 }
 
-fun getshaderiv(shader : int, type : int, error : int*) {
+fun getshaderiv(shader : int, type : int, error : *int) {
     __if_comp__ __C__ {
     simple_passthrough(shader, type, error ::) """
     glGetShaderiv(shader, type, error);
@@ -306,7 +306,7 @@ fun getshaderiv(shader : int, type : int, error : int*) {
     return
 }
 
-fun getshaderinfolog(shader : int, size : int, buffer : char*) {
+fun getshaderinfolog(shader : int, size : int, buffer : *char) {
     __if_comp__ __C__ {
     simple_passthrough(shader, size, buffer ::) """
     glGetShaderInfoLog(shader, size, NULL, buffer);
@@ -315,7 +315,7 @@ fun getshaderinfolog(shader : int, size : int, buffer : char*) {
     return
 }
 
-fun getuniformlocation(shader : int, name : char*) : int {
+fun getuniformlocation(shader : int, name : *char) : int {
     __if_comp__ __C__ {
     simple_passthrough(shader, name ::) """
     return glGetUniformLocation(shader, (const char*)name);
@@ -324,7 +324,7 @@ fun getuniformlocation(shader : int, name : char*) : int {
     return 0
 }
 
-fun uniform3f(location : int, vals : float*) {
+fun uniform3f(location : int, vals : *float) {
     __if_comp__ __C__ {
     simple_passthrough(location, vals ::) """
     glUniform3f(location, vals[0], vals[1], vals[2]);

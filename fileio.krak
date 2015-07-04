@@ -4,7 +4,7 @@ __if_comp__ __C__ simple_passthrough """
 
 def FILE int
 
-fun fopen(path : char*, mode : char*) : FILE* {
+fun fopen(path : *char, mode : *char) : *FILE {
     __if_comp__ __C__ {
         simple_passthrough(path = path, mode = mode ::) """
         return (void*) fopen(path,mode);
@@ -12,7 +12,7 @@ fun fopen(path : char*, mode : char*) : FILE* {
     }
 }
 
-fun fclose(stream : FILE*) : int {
+fun fclose(stream : *FILE) : int {
     __if_comp__ __C__ {
         simple_passthrough(stream = stream ::) """
         return fclose((FILE*)stream);
@@ -20,7 +20,7 @@ fun fclose(stream : FILE*) : int {
     }
 }
 
-fun fscanf(stream : FILE*, format : char*, arg1 : char*, arg2 : char*) : int {
+fun fscanf(stream : *FILE, format : *char, arg1 : *char, arg2 : *char) : int {
     __if_comp__ __C__ {
         simple_passthrough(stream = stream, format = format, arg1 = arg1, arg2 = arg2 ::) """
         return fscanf((FILE*)stream, format, arg1, arg2);
