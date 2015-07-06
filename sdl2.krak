@@ -140,3 +140,18 @@ fun checkPlayerKeys(keys : *void, k1 : int, k2 : int) : int {
     return 0
 }
 
+fun getticks() : int {
+    __if_comp__ __C__ {
+    simple_passthrough """
+    return SDL_GetTicks();
+    """
+    }
+}
+
+fun delay(t : int) {
+    __if_comp__ __C__ {
+    simple_passthrough(t::) """
+    SDL_Delay(t);
+    """
+    }
+}

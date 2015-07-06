@@ -36,10 +36,14 @@ fun main() : int {
     var dirx : int
     var diry : int
     var reset : bool = true
-
+    var fpscap : int = 1000/60
+    var currframetime : int 
+    
     io::println("===Score====")
     //Game Loop!!!
     while(!done) {
+        
+        currframetime = sdl2::getticks()
         /*
          * Check for keypresses
          */
@@ -64,7 +68,6 @@ fun main() : int {
         /*
          * Apply Update Position/Check for win conditions
          */
-        //FIXME TODO!!!
         //Someone just scored, reset delta vec
         if(reset) {
             io::print("Red: ")
@@ -72,7 +75,7 @@ fun main() : int {
             io::print(" Blue: ")
             io::print(bluepoints)
             io::print("\n")
-
+            
             reset = false
             dirx = rand()
             diry = rand()
@@ -110,11 +113,25 @@ fun main() : int {
                 diry = 0
             }
             //check collisions with paddles
-            //TODO
+            //paddle2 (right) x check
+            if(((pong.d[0]+0.02f <= 0.9f) && (pong.d[0]+0.02f >= 0.85f))) {
+                //paddle2 y check
+                if((pong.d[1]+0.02f <= 0.3f+paddle2.d[1]) && (pong.d[1]-0.02f >= -0.3f+paddle2.d[1])) {
+                    dirx = 0
+                }
+            }
+            //paddle1 (left) X check
+            if(pong.d[0]-0.02f >= -0.9f  && pong.d[0]-0.02f <= -0.85f){
+                //paddle1 y check
+                if(pong.d[1]+0.02f <= paddle1.d[1]+0.3f && pong.d[1]-0.02f >= paddle1.d[1]-0.3f) {
+                    dirx = 1
+                }
+            }
+                
         }
 
         //Update delta vec
-        temp = 0.02
+        temp = 0.01
         if(diry) {
             pong.d[1] = pong.d[1] + temp
         } else {
@@ -135,6 +152,12 @@ fun main() : int {
         pong.render()
 
         sdl2::gl_swapwindow(win.screen)
+
+        //Limit fps
+        var framespeed : int = sdl2::getticks() - currframetime
+        if(fpscap > framespeed) {
+            sdl2::delay(fpscap-framespeed)
+        }
     }
 
     io::println("Time to clean up!!")
