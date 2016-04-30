@@ -76,8 +76,8 @@ fun main() : int {
             io::print("\n")
             
             reset = false
-            dirx = rand()
-            diry = rand()
+            dirx = rand() % 2
+            diry = rand() % 2
             var f : float = 0.0
             if(dirx){
                 f = 0.02
@@ -205,11 +205,4 @@ fun initGameObjs(obj1 : *object::gameObject, obj2 : *object::gameObject, ball : 
 
 }
 
-fun rand() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return rand()%2;
-    """
-    }
-    return 0
-}
+ext fun rand() : int

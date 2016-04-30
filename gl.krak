@@ -1,13 +1,11 @@
-__if_comp__ __C__ simple_passthrough(::"-lGL -lGLEW") """
-    #include <GL/glew.h>
-    #include <GL/gl.h>
-"""
+#link(GL,GLEW)
 
 //**********
 //WOO top-level vars!!!
 //Begin constants
 //**********
 
+var GL_TRIANGLES : int = 4
 var COLOR_BUFFER_BIT : int = 16384
 var BLEND : int = 3042
 var PROJECTION : int = 5889
@@ -27,326 +25,147 @@ var QUADS : int = 7
 //End constants
 //**********
 
-fun clearcolor(r:double,g:double,b:double,a:double) {
-    __if_comp__ __C__ {
-        simple_passthrough(r = r, g = g, b = b, a = a::) """
-        return glClearColor(r,g,b,a);
-        """
-    }
-    return
-}
+ext fun glClearColor(r:double,g:double,b:double,a:double)
+fun clearcolor(r:double,g:double,b:double,a:double) 
+    glClearColor(r,g,b,a)
 
-fun clear(mask : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(mask ::) """
-    return glClear(mask);
-    """
-    }
-    return
-}
+ext fun glClear(mask: int)
+fun clear(mask : int) 
+    glClear(mask)
 
-fun viewport(x:int,y:int,width:int,height:int) {
-    __if_comp__ __C__ {
-    simple_passthrough(x = x, y = y, width = width, height = height::) """
-    return glViewport(x,y,width,height);
-    """
-    }
-    return
-}
+ext fun glViewport(x:int,y:int,width:int,height:int)
+fun viewport(x:int,y:int,width:int,height:int)
+    glViewport(x,y,width,height)
 
-fun matrixmode(mode : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(mode ::) """
-    return glMatrixMode(mode);
-    """
-    }
-    return
-}
+ext fun glMatrixMode(mode : int)
+fun matrixmode(mode : int)
+    glMatrixMode(mode)
 
-fun enable(cap : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(cap ::) """
-    return glEnable(cap);
-    """
-    }
-    return
-}
+ext fun glEnable(cap : int) 
+fun enable(cap : int)
+    glEnable(cap)
 
-fun blendfunc(sfactor : int, dfactor : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(sfactor, dfactor ::) """
-    return glBlendFunc(sfactor, dfactor);
-    """
-    }
-    return
-}
+ext fun glBlendFunc(sfactor : int, dfactor : int)
+fun blendfunc(sfactor : int, dfactor : int)
+    glBlendFunc(sfactor, dfactor)
 
-fun loadidentity() {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return glLoadIdentity();
-    """
-    }
-    return
-}
+ext fun glLoadIdentity()
+fun loadidentity()
+    glLoadIdentity()
 
-fun ortho(left : int, right : int, bottom : int, top : int, nearVal : int, farVal : int) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(left=left, right=right, bottom=bottom, top=top, nearVal=nearVal, farVal=farVal::) """
-    return glOrtho((float)left, (float)right, (float)bottom, (float)top, (float)nearVal, (float)farVal);
-    """
-    }
-    return
-}
+ext fun glOrtho(left : float, right : float, bottom : float, top : float, nearVal : float, farVal : float)
+fun ortho(left : int, right : int, bottom : int, top : int, nearVal : int, farVal : int)
+    glOrtho((left) cast float, (right) cast float, (bottom) cast float, (top) cast float, (nearVal) cast float, (farVal) cast float)
 
-fun glewinit() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return glewInit();
-    """
-    }
-    return 0
-}
+ext fun glewInit() : int
+fun glewinit() : int
+    return glewInit()
 
-fun genbuffers(size : int, buffers : *int) {
-    __if_comp__ __C__ {
-    simple_passthrough(size=size,buffers=buffers::) """
-    glGenBuffers(size, buffers);
-    """
-    }
-    return
-}
+ext fun glGenBuffers(size : int, buffers : *int)
+fun genbuffers(size : int, buffers : *int)
+    glGenBuffers(size, buffers)
 
-fun bindbuffer(target : int, buffer : int) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(target = target, buffer = buffer ::) """
-    glBindBuffer(target, buffer);
-    """
-    }
-    return
-}
+ext fun glBindBuffer(target : int, buffer : int)
+fun bindbuffer(target : int, buffer : int)
+    glBindBuffer(target, buffer)
 
-fun bufferdata(target : int, size : int, data : *float, usage : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(target = target, size = size, data = data, usage = usage::) """
-    glBufferData(target, size, (void*)data, usage);
-    """
-    }
-    return
-}
+ext fun glBufferData(target : int, size : int, data : *void, usage : int)
+fun bufferdata(target : int, size : int, data : *float, usage : int)
+    glBufferData(target, size, (data) cast *void, usage)
 
-fun geterror() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return glGetError();
-    """
-    }
-    return 0
-}
+ext fun glGetError() : int
+fun geterror() : int
+    glGetError()
 
-fun vertexattribpointer(index : int, size : int, type : int, normalized : int, stride : int, pointer : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(index = index, size = size, type = type, normalized = normalized, stride = stride, pointer = pointer::) """
-    glVertexAttribPointer(index, size, type, (char)normalized, stride, (void*)pointer);
-    """
-    }
-    return
-}
+ext fun glVertexAttribPointer(index : int, size : int, type : int, normalized : char, stride : int, pointer : *void)
+fun vertexattribpointer(index : int, size : int, type : int, normalized : int, stride : int, pointer : int)
+    glVertexAttribPointer(index, size, type, (normalized) cast char, stride, (pointer) cast *void)
 
-fun enablevertexattribarray(index : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(index = index::) """
-    glEnableVertexAttribArray(index);
-    """
-    }
-    return
-}
+ext fun glEnableVertexAttribArray(index : int)
+fun enablevertexattribarray(index : int)
+    glEnableVertexAttribArray(index)
 
-fun createshader(shaderType : int) : int {
-    __if_comp__ __C__ {
-    simple_passthrough(shaderType = shaderType::) """
-    return glCreateShader(shaderType);
-    """
-    }
-    return 0
-}
+ext fun glCreateShader(shaderType : int) : int
+fun createshader(shaderType : int) : int
+    return glCreateShader(shaderType)
 
-fun createprogram() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return glCreateProgram();
-    """
-    }
-    return 0
-}
+ext fun glCreateProgram() : int
+fun createprogram() : int
+    return glCreateProgram()
 
-fun shadersource(shader : int, count : int, string : **char, length : *int) {
-    __if_comp__ __C__ {
-    simple_passthrough(shader = shader, count = count, string = string, length = length::) """
-    glShaderSource(shader, count, (const char**)string, length);
-    """
-    }
-    return
-}
+ext fun glShaderSource(shader : int, count : int, string : **char, length : *int)
+fun shadersource(shader : int, count : int, string : **char, length : *int)
+    glShaderSource(shader, count, string, length)
 
-fun compileshader(shader : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(shader = shader ::) """
-    glCompileShader(shader);
-    """
-    }
-    return
-}
+ext fun glCompileShader(shader : int)
+fun compileshader(shader : int)
+    glCompileShader(shader)
 
-fun attachshader(program : int, shader : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(program = program, shader = shader ::) """
-    glAttachShader(program, shader);
-    """
-    }
-    return
-}
+ext fun glAttachShader(program : int, shader : int)
+fun attachshader(program : int, shader : int)
+    glAttachShader(program, shader)
 
-fun bindattriblocation(program : int, index : int, name : *char) {
-    __if_comp__ __C__ {
-    simple_passthrough(program = program, index = index, name = name ::) """
-    glBindAttribLocation(program, index,  name);
-    """
-    }
-    return
-}
+ext fun glBindAttribLocation(program : int, index : int, name : *char)
+fun bindattriblocation(program : int, index : int, name : *char)
+    glBindAttribLocation(program, index,  name)
 
-fun linkprogram(program : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(program = program ::) """
-    glLinkProgram(program);
-    """
-    }
-    return
-}
+ext fun glLinkProgram(program : int)
+fun linkprogram(program : int)
+    glLinkProgram(program)
 
-fun useprogram(program : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(program = program ::) """
-    glUseProgram(program);
-    """
-    }
-    return
-}
+ext fun glUseProgram(program : int)
+fun useprogram(program : int)
+    glUseProgram(program)
 
-fun deleteshader(shader : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(shader = shader ::) """
-    glDeleteShader(shader);
-    """
-    }
-    return
-}
+ext fun glDeleteShader(shader : int)
+fun deleteshader(shader : int)
+    glDeleteShader(shader)
 
-fun deleteprogram(program : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(program = program ::) """
-    glDeleteProgram(program);
-    """
-    }
-    return
-}
+ext fun glDeleteProgram(program : int)
+fun deleteprogram(program : int)
+    glDeleteProgram(program)
 
-fun vertex3f(x : float, y : float, z : float) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(x = x, y = y, z = z ::) """
-    glVertex3f(x,y,z);
-    """
-    }
-    return
-}
+ext fun glVertex3f(x : float, y : float, z : float)
+fun vertex3f(x : float, y : float, z : float)
+    glVertex3f(x,y,z)
 
-fun color3f(x : float, y : float, z : float) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(x = x, y = y, z = z ::) """
-    glColor3f(x,y,z);
-    """
-    }
-    return
-}
+ext fun glColor3f(x : float, y : float, z : float)
+fun color3f(x : float, y : float, z : float)
+    glColor3f(x,y,z)
 
-fun begin() : void {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    glBegin(GL_TRIANGLES);
-    """
-    }
-    return
-}
+ext fun glBegin(it: int)
+fun begin()
+    glBegin(GL_TRIANGLES)
 
-fun end() : void {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    glEnd();
-    """
-    }
-    return
-}
+ext fun glEnd()
+fun end()
+    glEnd()
 
-fun drawarrays(mode : int, first : int, count : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(mode, first, count ::) """
-    glDrawArrays(mode, first, count);
-    """
-    }
-    return
-}
+ext fun glDrawArrays(mode : int, first : int, count : int)
+fun drawarrays(mode : int, first : int, count : int)
+    glDrawArrays(mode, first, count)
 
-fun getshaderiv(shader : int, type : int, error : *int) {
-    __if_comp__ __C__ {
-    simple_passthrough(shader, type, error ::) """
-    glGetShaderiv(shader, type, error);
-    """
-    }
-    return
-}
+ext fun glGetShaderiv(shader : int, type : int, error : *int)
+fun getshaderiv(shader : int, type : int, error : *int)
+    glGetShaderiv(shader, type, error)
 
-fun getshaderinfolog(shader : int, size : int, buffer : *char) {
-    __if_comp__ __C__ {
-    simple_passthrough(shader, size, buffer ::) """
-    glGetShaderInfoLog(shader, size, NULL, buffer);
-    """
-    }
-    return
-}
+ext fun glGetShaderInfoLog(shader : int, size : int, length: *void, buffer : *char)
+fun getshaderinfolog(shader : int, size : int, buffer : *char)
+    glGetShaderInfoLog(shader, size, (0) cast *void, buffer)
 
-fun getuniformlocation(shader : int, name : *char) : int {
-    __if_comp__ __C__ {
-    simple_passthrough(shader, name ::) """
-    return glGetUniformLocation(shader, (const char*)name);
-    """
-    }
-    return 0
-}
+ext fun glGetUniformLocation(shader : int, name : *char) : int
+fun getuniformlocation(shader : int, name : *char) : int
+    return glGetUniformLocation(shader, name)
 
-fun uniform3f(location : int, vals : *float) {
-    __if_comp__ __C__ {
-    simple_passthrough(location, vals ::) """
-    glUniform3f(location, vals[0], vals[1], vals[2]);
-    """
-    }
-    return
-}
+ext fun glUniform3f(location : int, v1: float, v2: float, v3: float)
+fun uniform3f(location : int, vals : *float)
+    glUniform3f(location, vals[0], vals[1], vals[2])
 
-fun finish() {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    glFinish();
-    """
-    }
-    return
-}
+ext fun glFinish()
+fun finish()
+    glFinish()
 
-fun detachshader(program : int, shader : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(program, shader ::) """
-    glDetachShader(program, shader);
-    """
-    }
-    return
-}
+ext fun glDetachShader(program : int, shader : int)
+fun detachshader(program : int, shader : int)
+    glDetachShader(program, shader)
+

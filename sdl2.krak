@@ -1,8 +1,5 @@
-__if_comp__ __C__ simple_passthrough(::"-lSDL2") """
-    #include <SDL2/SDL.h>
-
-    SDL_Event event;
-"""
+import mem
+#link(SDL2)
 
 /*
  * Some Global flags!!
@@ -11,147 +8,96 @@ var SCANCODE_W : int = 26
 var SCANCODE_S : int = 22
 var SCANCODE_UP : int = 82
 var SCANCODE_DOWN : int = 81
+
+var SDL_INIT_VIDEO : uint = 32
+var SDL_GL_CONTEXT_MAJOR_VERSION : uint = 17
+var SDL_GL_CONTEXT_MINOR_VERSION : uint = 18
+var SDL_GL_DOUBLEBUFFER : uint = 5
+var SDL_GL_DEPTH_SIZE : uint = 6
+var SDL_WINDOWPOS_UNDEFINED : uint = 536805376
+var SDL_WINDOW_SHOWN : uint = 4
+var SDL_WINDOW_OPENGL : uint = 2
+var SDL_QUIT : uint = 256
+var SDL_KEYDOWN : uint = 768
+var SDL_SCANCODE_ESCAPE : uint = 41
 /*
  * End flags!!!
  */
+ext fun SDL_Init(i:uint): int 
+fun init_video() : int
+    SDL_Init(SDL_INIT_VIDEO)
 
-fun init_video() : int {
-    __if_comp__ __C__ {
-        simple_passthrough """
-        return SDL_Init(SDL_INIT_VIDEO);
-        """
-    }
+ext fun SDL_Quit()
+fun quit()
+    SDL_Quit()
+
+ext fun SDL_GL_SetAttribute(enum: uint, value: int)
+fun gl_setattributes(major : int, minor : int, dbuff : int, depth : int) {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major)
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor)
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, dbuff)
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, depth)
 }
 
-fun quit() : void {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return SDL_Quit();
-    """
-    return
-    }
-}
-
-fun gl_setattributes(major : int, minor : int, dbuff : int, depth : int) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(major = major, minor = minor, dbuff = dbuff, depth = depth::) """
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
-	    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, dbuff);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, depth);
-        """
-        }
-        return
-}
-
+ext fun SDL_CreateWindow(name : *char, a: uint, b: uint, width : int, height : int, mask: uint) : *void
 fun createwindow(name : *char, width : int, height : int) : *void {
-    __if_comp__ __C__ {
-    simple_passthrough(name = name, width = width, height = height::) """
-        return (void*)SDL_CreateWindow((const char*) name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-        """
-    }
+        return SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)
 }
 
-fun gl_createcontext(screen : *void) : *void {
-    __if_comp__ __C__ {
-    simple_passthrough(screen = screen::) """
-    return (void*)SDL_GL_CreateContext((SDL_Window*)screen);
-    """
-    }
-}
+ext fun SDL_GL_CreateContext(screen : *void) : *void
+fun gl_createcontext(screen : *void) : *void
+    return SDL_GL_CreateContext(screen)
 
-fun gl_deletecontext(context : *void) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(context = context::) """
-    return SDL_GL_DeleteContext((SDL_GLContext)context);
-    """
-    }
-    return
-}
+ext fun SDL_GL_DeleteContext(context : *void)
+fun gl_deletecontext(context : *void)
+    SDL_GL_DeleteContext(context)
 
-fun destroywindow(screen : *void) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(screen = screen::) """
-    return SDL_DestroyWindow((SDL_Window*)screen);
-    """
-    }
-    return
-}
+ext fun SDL_DestroyWindow(screen : *void)
+fun destroywindow(screen : *void)
+    SDL_DestroyWindow(screen)
 
-fun gl_swapwindow(screen : *void) : void {
-    __if_comp__ __C__ {
-    simple_passthrough(screen = screen::) """
-    return SDL_GL_SwapWindow((SDL_Window*)screen);
-    """
-    }
-    return
-}
+ext fun SDL_GL_SwapWindow(screen : *void)
+fun gl_swapwindow(screen : *void)
+    SDL_GL_SwapWindow(screen)
 
-fun getkeyboardstate() : *void {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return (void*)SDL_GetKeyboardState(NULL);
-    """
-    }
-}
+ext fun SDL_GetKeyboardState(something: *void) : *void
+fun getkeyboardstate() : *void
+    return SDL_GetKeyboardState((0) cast *void)
 
+var event: *uint
+ext fun SDL_PollEvent(should_be_struct_ptr: *void) : int
 fun pollevent() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return SDL_PollEvent(&event);
-    """
-    }
-    return 0
+    if (!event)
+        event = mem::new<uint>(100) // just guess at how big the struct would be! 0.0
+    return SDL_PollEvent((event) cast *void)
 }
 
 fun checkEvent(keys : *void) : int {
-    __if_comp__ __C__ {
-    simple_passthrough(keys = keys ::) """
-    switch(event.type) {
-        case SDL_QUIT:
+    // event would be the first uint8 in the struct, so :/
+    if (*event == SDL_QUIT) {
             return 1;
-            break;
-        case SDL_KEYDOWN:
-            if( ((const Uint8*)keys)[SDL_SCANCODE_ESCAPE]) {
-                return 1;
-            }
-            break;
-
-        default:
-            return 0;
-            break;
-    }
-    """
+    } else if (*event == SDL_KEYDOWN) {
+        if( ((keys) cast *uchar)[SDL_SCANCODE_ESCAPE]) {
+            return 1;
+        }
     }
     return 0
 }
 
 fun checkPlayerKeys(keys : *void, k1 : int, k2 : int) : int {
-    __if_comp__ __C__ {
-    simple_passthrough(keys, k1, k2 ::) """
-    if( ((const Uint8*)keys)[k1]) {
+    if ( ((keys) cast *uchar)[k1]) {
         return 1;
-    }else if( ((const Uint8*)keys)[k2]) {
+    } else if ( ((keys) cast *uchar)[k2]) {
         return 2;
-    }
-    """
     }
     return 0
 }
 
-fun getticks() : int {
-    __if_comp__ __C__ {
-    simple_passthrough """
-    return SDL_GetTicks();
-    """
-    }
-}
+ext fun SDL_GetTicks() : int
+fun getticks() : int
+    return SDL_GetTicks()
 
-fun delay(t : int) {
-    __if_comp__ __C__ {
-    simple_passthrough(t::) """
-    SDL_Delay(t);
-    """
-    }
-}
+ext fun SDL_Delay(t : int)
+fun delay(t : int)
+    SDL_Delay(t)
