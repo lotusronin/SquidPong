@@ -47,7 +47,9 @@ obj shader {
         io::println("setting shader source")
         var vs : *char = vertsrc.toCharArray()
         var fs : *char = fragsrc.toCharArray()
-        
+        defer mem::delete(vs)
+        defer mem::delete(fs)
+
         var null : *int = 0
         gl::shadersource(vshad, 1, &vs, null)
         gl::shadersource(fshad, 1, &fs, null)
@@ -95,13 +97,6 @@ obj shader {
         gl::deleteshader(vshad)
         gl::deleteshader(fshad)
 
-        //memory leack check
-        vertsrc.destruct()
-        fragsrc.destruct()
-        mem::free<char>(vs)
-        mem::free<char>(fs)
-
-        
         return
     }
 
@@ -117,5 +112,7 @@ obj shader {
 
     fun destruct() {
         gl::deleteprogram(prog)
+        vertsrc.destruct()
+        fragsrc.destruct()
     }
 }
