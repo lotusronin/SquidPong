@@ -1,4 +1,4 @@
-#link(GL,GLEW)
+#link("GL","GLEW")
 
 //**********
 //WOO top-level vars!!!

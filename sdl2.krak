@@ -1,5 +1,5 @@
 import mem
-#link(SDL2)
+#link("SDL2")
 
 /*
  * Some Global flags!!
@@ -9,17 +9,17 @@ var SCANCODE_S : int = 22
 var SCANCODE_UP : int = 82
 var SCANCODE_DOWN : int = 81
 
-var SDL_INIT_VIDEO : uint = 32
-var SDL_GL_CONTEXT_MAJOR_VERSION : uint = 17
-var SDL_GL_CONTEXT_MINOR_VERSION : uint = 18
-var SDL_GL_DOUBLEBUFFER : uint = 5
-var SDL_GL_DEPTH_SIZE : uint = 6
-var SDL_WINDOWPOS_UNDEFINED : uint = 536805376
-var SDL_WINDOW_SHOWN : uint = 4
-var SDL_WINDOW_OPENGL : uint = 2
-var SDL_QUIT : uint = 256
-var SDL_KEYDOWN : uint = 768
-var SDL_SCANCODE_ESCAPE : uint = 41
+var SDL_INIT_VIDEO : uint = 32u
+var SDL_GL_CONTEXT_MAJOR_VERSION : uint = 17u
+var SDL_GL_CONTEXT_MINOR_VERSION : uint = 18u
+var SDL_GL_DOUBLEBUFFER : uint = 5u
+var SDL_GL_DEPTH_SIZE : uint = 6u
+var SDL_WINDOWPOS_UNDEFINED : uint = 536805376u
+var SDL_WINDOW_SHOWN : uint = 4u
+var SDL_WINDOW_OPENGL : uint = 2u
+var SDL_QUIT : uint = 256u
+var SDL_KEYDOWN : uint = 768u
+var SDL_SCANCODE_ESCAPE : uint = 41u
 /*
  * End flags!!!
  */
